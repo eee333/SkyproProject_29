@@ -16,7 +16,7 @@ class Category(models.Model):
 
 class Ad(models.Model):
     name = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
+    price = models.DecimalField(max_digits=12, decimal_places=0)
     description = models.TextField(max_length=1000, null=True)
     is_published = models.BooleanField(default=False)
     image = models.ImageField(upload_to='media/', null=True)

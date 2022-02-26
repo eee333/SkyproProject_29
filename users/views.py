@@ -1,19 +1,25 @@
 import json
 
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 
+from avito import settings
 from users.models import Location, User
+from users.serializers import UserSerializer, LocationSerializer, LocationCreateSerializer
 
 
-class LocationListView(ListView):
-    model = Location
+class LocationListView(ListAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
 
-    def get(self, request, *args, **kwargs):
+
+    """def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
         response = []
         for location in self.object_list:
@@ -24,11 +30,14 @@ class LocationListView(ListView):
                 "lng": location.lng,
             })
 
-        return JsonResponse(response, safe=False)
+        return JsonResponse(response, safe=False)"""
 
 
-class LocationDetailView(DetailView):
-    model = Location
+class LocationDetailView(RetrieveAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+    """model = Location
 
     def get(self, request, *args, **kwargs):
         location = self.get_object()
@@ -38,12 +47,14 @@ class LocationDetailView(DetailView):
             "name": location.name,
             "lat": location.lat,
             "lng": location.lng,
-        })
+        })"""
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class LocationCreateView(CreateView):
-    model = Location
+class LocationCreateView(CreateAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+    """model = Location
     fields = ["name", "lat", "lng"]
 
     def post(self, request, *args, **kwargs):
@@ -60,12 +71,14 @@ class LocationCreateView(CreateView):
             "name": location.name,
             "lat": location.lat,
             "lng": location.lng,
-        }, status=201)
+        }, status=201)"""
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class LocationUpdateView(UpdateView):
-    model = Location
+class LocationUpdateView(UpdateAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+    """model = Location
     fields = ["name", "lat", "lng"]
 
     def put(self, request, *args, **kwargs):
@@ -82,18 +95,20 @@ class LocationUpdateView(UpdateView):
             "name": self.object.name,
             "lat": self.object.lat,
             "lng": self.object.lng,
-        })
+        })"""
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class LocationDeleteView(DeleteView):
-    model = Location
+class LocationDeleteView(DestroyAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+    """model = Location
     success_url = "/"
 
     def delete(self, request, *args, **kwargs):
         super().delete(request, *args, **kwargs)
 
-        return JsonResponse({"status": "ok"}, status=204)
+        return JsonResponse({"status": "ok"}, status=204)"""
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -103,7 +118,14 @@ class UserListView(ListView):
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
 
-        response = []
+        paginator = Paginator(
+            self.object_list.annotate(ads=Count('ad', filter=Q(ad__is_published=True))),
+            settings.TOTAL_ON_PAGE
+        )
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+
+        """response = []
         for user in self.object_list.annotate(ads=Count('ad', filter=Q(ad__is_published=True))):
             response.append({
                 "id": user.id,
@@ -114,8 +136,8 @@ class UserListView(ListView):
                 "age": user.age,
                 "locations": [loc.name for loc in user.locations.all()],
                 "total_ads": user.ads,
-            })
-
+            })"""
+        response = UserSerializer(page_obj, many=True).data
         return JsonResponse(response, safe=False)
 
 
