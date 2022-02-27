@@ -4,14 +4,6 @@ from users.models import User, Location
 
 
 class LocationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Location
-        fields = '__all__'
-
-
-class LocationCreateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Location
         fields = '__all__'
@@ -61,7 +53,6 @@ class UserCrateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = '__all__'
