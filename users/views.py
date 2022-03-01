@@ -12,38 +12,11 @@ from rest_framework.viewsets import ModelViewSet
 
 from avito import settings
 from users.models import Location, User
-from users.serializers import UserSerializer, LocationSerializer, LocationCreateSerializer, UserCrateSerializer, \
+from users.serializers import UserSerializer, LocationSerializer, UserCrateSerializer, \
     UserUpdateSerializer
 
 
 class LocationViewSet(ModelViewSet):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-
-class LocationListView(ListAPIView):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-
-class LocationDetailView(RetrieveAPIView):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-
-class LocationCreateView(CreateAPIView):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-
-class LocationUpdateView(UpdateAPIView):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-
-
-
-class LocationDeleteView(DestroyAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
 
