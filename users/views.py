@@ -1,16 +1,6 @@
-import json
-
-from django.core.exceptions import ValidationError
-from django.core.paginator import Paginator
-from django.db.models import Count, Q
-from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 
-from avito import settings
 from users.models import Location, User
 from users.serializers import UserSerializer, LocationSerializer, UserCrateSerializer, \
     UserUpdateSerializer
@@ -32,6 +22,11 @@ class UserDetailView(RetrieveAPIView):
 
 
 class UserCreateView(CreateAPIView):
+    """
+    Создание пользователя с локацией по названию.
+    Если такой локации нет, то она будет создана.
+    Локации передаются списком названий.
+    """
     queryset = User.objects.all()
     serializer_class = UserCrateSerializer
 
