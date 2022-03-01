@@ -1,12 +1,11 @@
-project 28
+project 29
 =========
-"Postgres, Модели с relations и QuerySet."
+"Урок 29. Сериализаторы и вьюсеты."
 ---------
 Веб-сервер на Django. Типа Авито.
 
 Все запросы Можно протестиравать в Постман
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/f46b53e58313210a38f8?action=collection%2Fimport)
-
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/5142b79eac64876e46a8?action=collection%2Fimport)
 
 
