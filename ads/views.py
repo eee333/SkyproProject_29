@@ -24,28 +24,16 @@ class AdViewSet(ModelViewSet):
     serializer_class = AdSerializer
 
     def list(self, request, *args, **kwargs):
-        cat = request.GET.getlist("cat", None)
-        text = request.GET.get("text", None)
-        location = request.GET.get("location", None)
-        price_from = request.GET.get("price_from", None)
-        price_to = request.GET.get("price_to", None)
 
-        cat_q = None
-        for cat_id in cat:
-            if not cat_q:
-                cat_q = Q(category=cat_id)
-            else:
-                cat_q |= Q(category=cat_id)
-        if cat_q:
-            self.queryset = self.queryset.filter(cat_q)
-
-        if text:
-            self.queryset = self.queryset.filter(name__contains=text)
-        if location:
-            self.queryset = self.queryset.filter(user__locations__name__icontains=location)
-        if price_from:
+        if cat_list := request.GET.getlist("cat", []):
+            self.queryset = self.queryset.filter(category_id__in=cat_list)
+        if text := request.GET.get("text", None):
+            self.queryset = self.queryset.filter(name__icontains=text)
+        if location := request.GET.get("location", None):
+            self.queryset = self.queryset.filter(user__locations__name__icontains=location).distinct()
+        if price_from := request.GET.get("price_from", None):
             self.queryset = self.queryset.filter(price__gte=price_from)
-        if price_to:
+        if price_to := request.GET.get("price_to", None):
             self.queryset = self.queryset.filter(price__lte=price_to)
 
         return super().list(request, *args, **kwargs)
